@@ -25,6 +25,15 @@ def get_mcp_client():
 
 
 async def get_calendar_tools(client: MultiServerMCPClient):
-    """Get calendar tools from MCP client"""
+    """Get calendar tools from MCP Server"""
     tools = await client.get_tools()
     return [t for t in tools if "calendar" in t.name.lower()]
+
+async def get_gmail_tools(client: MultiServerMCPClient):
+    """Get Gmail tools from MCP Server"""
+    tools = await client.get_tools()
+    return [t for t in tools if "gmail" in t.name.lower()]
+
+async def get_all_mcp_tools(client: MultiServerMCPClient):
+    """Get all tools from MCP Server"""
+    return await client.get_tools()
