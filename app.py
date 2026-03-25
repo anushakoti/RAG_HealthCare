@@ -1,5 +1,5 @@
 """
-Streamlit UI for HealthFirst Medical Clinic
+Streamlit UI for MediCare Plus Medical Center
 Imports the LangGraph graph directly (no API calls).
 Run: streamlit run app.py
 """
@@ -28,7 +28,7 @@ def _extract_text(messages) -> str:
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="HealthFirst Medical Clinic",
+    page_title="MediCare Plus Medical Center",
     page_icon="🏥",
     layout="centered",
 )
@@ -63,72 +63,75 @@ def connect_full_system():
 
 # --- Sidebar ---
 with st.sidebar:
-    st.title("HealthFirst Clinic")
-    st.caption("Multi-Agent Appointment System")
+    st.title("MediCare Plus")
+    st.caption("Intelligent Healthcare Assistant")
 
     st.divider()
 
     # Mode selector
-    st.subheader("Mode")
+    st.subheader("System Status")
     if st.session_state.mode == "faq_only":
-        st.info("FAQ Only (no MCP)")
-        if st.button("Connect Full System"):
-            with st.spinner("Connecting to Composio MCP..."):
+        st.info("📋 Basic Information Mode")
+        if st.button("🔌 Enable Full Services"):
+            with st.spinner("Connecting to healthcare services..."):
                 if connect_full_system():
-                    st.success("Connected! Full system active.")
+                    st.success("✅ Full services activated!")
                     st.rerun()
     else:
-        st.success("Full Multi-Agent System")
+        st.success("🚀 Full Service Mode Active")
+        st.caption("All healthcare services available")
 
     st.divider()
 
     # User ID
-    st.subheader("User")
-    new_user = st.text_input("User ID", value=st.session_state.user_id)
+    st.subheader("Patient Information")
+    new_user = st.text_input("Patient ID", value=st.session_state.user_id)
     if new_user != st.session_state.user_id:
         st.session_state.user_id = new_user
 
     st.divider()
 
     # Session info
-    st.subheader("Session")
-    st.text(f"Thread: {st.session_state.thread_id}")
-    st.text(f"User: {st.session_state.user_id}")
+    st.subheader("Session Details")
+    st.text(f"Session ID: {st.session_state.thread_id}")
+    st.text(f"Patient: {st.session_state.user_id}")
 
-    if st.button("New Conversation"):
+    if st.button("🔄 Start New Session"):
         st.session_state.thread_id = str(uuid.uuid4())[:8]
         st.session_state.messages = []
         st.rerun()
 
     st.divider()
 
-    st.subheader("Try asking:")
+    st.subheader("💡 Quick Questions")
     if st.session_state.mode == "full":
         st.markdown("""
-        - What are your clinic hours?
-        - I'd like to book an appointment
-        - Which doctors are available?
-        - What's the cancellation policy?
+        - What are your operating hours?
+        - I need to schedule an appointment
+        - Which specialists are available?
+        - What's your cancellation policy?
         - Book me with Dr. Chen tomorrow at 10 AM
+        - How do I prepare for a consultation?
         """)
     else:
         st.markdown("""
-        - What are your clinic hours?
-        - Which doctors work here?
+        - What are your operating hours?
+        - Which doctors are on staff?
         - What's the cancellation policy?
-        - Do you accept insurance?
-        - Where is the clinic located?
+        - Do you accept my insurance?
+        - Where is the medical center located?
+        - How do I contact the clinic?
         """)
 
     st.divider()
-    st.caption("Powered by LangGraph + AWS Bedrock")
+    st.caption("Powered by AI Healthcare Assistant")
 
 # --- Main Chat Area ---
-st.title("HealthFirst Medical Clinic")
+st.title("🏥 MediCare Plus Medical Center")
 if st.session_state.mode == "full":
-    st.caption("Ask questions, book appointments, or request confirmations. The supervisor routes automatically.")
+    st.caption("✨ Full service mode active. Ask about appointments, doctor availability, medical services, or get assistance with scheduling.")
 else:
-    st.caption("Ask me anything about our clinic, doctors, policies, and services.")
+    st.caption("📋 Basic information mode. Ask about clinic hours, doctors, policies, and general medical services.")
 
 # Display chat history
 for msg in st.session_state.messages:
@@ -136,7 +139,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # Chat input
-if prompt := st.chat_input("Type your message..."):
+if prompt := st.chat_input("Type your healthcare question here..."):
     # Show user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -153,7 +156,7 @@ if prompt := st.chat_input("Type your message..."):
     graph = st.session_state.graph
 
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
+        with st.spinner("MediCare AI is thinking..."):
             if st.session_state.mode == "full":
                 result = asyncio.run(graph.ainvoke(
                     {"messages": [("user", prompt)]},
