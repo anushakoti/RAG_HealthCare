@@ -1,7 +1,7 @@
 """
 Booking Agent for MAS Clinic: Node Function for appointment via google calendar.
 """
-from langgraph.graph import MessagesState
+from agents.state import AgentState
 from config.models import llm
 
 SYSTEM_PROMPT = """You are a booking assistant at HealthFirst Medical Clinic.
@@ -31,7 +31,7 @@ def create_booking_node(calendar_tools):
     Create a booking node that uses the calendar tools for conflict checking.
     """
     llm_with_tools = llm.bind_tools(calendar_tools)
-    def booking_node(state: MessagesState):
+    def booking_node(state: AgentState):
         message= [{"role": "system", "content": SYSTEM_PROMPT},]+state["messages"]
         response = llm_with_tools.invoke(message)
         return {"messages": [response]}
