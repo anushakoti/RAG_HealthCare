@@ -156,7 +156,3 @@ Agent and RAG pipeline evaluation is implemented using **LangSmith**, tracking:
 - Latency per query
 
 
-
-## License
-
-MIT
